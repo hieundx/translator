@@ -7,8 +7,8 @@ import dotenv
 dotenv.load_dotenv()
 
 # Local inference
-# pipeline_en = pipeline('translation', 'Helsinki-NLP/opus-mt-en-vi')
-# pipeline_vi = pipeline('translation', 'Helsinki-NLP/opus-mt-vi-en')
+# pipeline_en = pipeline('translation', 'hieundx/mt-en-vi')
+# pipeline_vi = pipeline('translation', 'hieundx/mt-vi-en')
 
 # Use cloud-based inference API due to Streamlit sharing's limitation
 headers = {"Authorization": f"Bearer {os.environ['HF_API_KEY']}"}
@@ -18,19 +18,19 @@ def query(api_url, text):
 	return response.json()
 
 def pipeline_en(text):
-     return query("https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-vi", text)
+     return query("https://api-inference.huggingface.co/models/hieundx/mt-en-vi", text)
 
 def pipeline_vi(text):
-     return query("https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-vi-en", text)
+     return query("https://api-inference.huggingface.co/models/hieundx/mt-vi-en", text)
 	
 st.title('English -> Tiếng Việt')
 
 def generate_response(text, pipeline):
     try:
         response = pipeline(text)
-        st.info(response[0]['translation_text'])
+        st.info(response[0]['generated_text'])
     except:
-        st.error('Oops! Something went wrong. Please try again.')
+        st.error('Rate limit exceeded 😟. Please try again in 1 minute.')
 
 with st.form('en_vi'):
     text = st.text_area('Enter text:', 'Today is a good day.')
