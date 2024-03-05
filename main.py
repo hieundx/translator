@@ -26,9 +26,11 @@ def pipeline_vi(text):
 st.title('English -> Tiếng Việt')
 
 def generate_response(text, pipeline):
-    response = pipeline(text)
-
-    st.info(response[0]['translation_text'])
+    try:
+        response = pipeline(text)
+        st.info(response[0]['translation_text'])
+    except:
+        st.error('Oops! Something went wrong. Please try again.')
 
 with st.form('en_vi'):
     text = st.text_area('Enter text:', 'Today is a good day.')
@@ -39,6 +41,6 @@ with st.form('en_vi'):
 st.title('Tiếng Việt -> English')
 with st.form('vi_en'):
     text = st.text_area('Enter text:', 'Chào bạn.')
-    submitted = st.form_submit_button('Translate')
+    submitted = st.form_submit_button('Dịch')
     if submitted:
         generate_response(text, pipeline_vi)
