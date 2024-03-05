@@ -21,26 +21,26 @@ def pipeline_en(text):
      return query("https://api-inference.huggingface.co/models/hieundx/mt-en-vi", text)
 
 def pipeline_vi(text):
-     return query("https://api-inference.huggingface.co/models/hieundx/mt-vi-en", text)
+     return query("https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-vi-en", text)
 	
 st.title('English -> Tiếng Việt')
 
-def generate_response(text, pipeline):
+def generate_response(text, pipeline, response_key):
     try:
         response = pipeline(text)
-        st.info(response[0]['generated_text'])
+        st.info(response[0][response_key])
     except:
-        st.error('Rate limit exceeded 😟. Please try again in 1 minute.')
+        st.error(response['error'])
 
 with st.form('en_vi'):
     text = st.text_area('Enter text:', 'Today is a good day.')
     submitted = st.form_submit_button('Translate')
     if submitted:
-        generate_response(text, pipeline_en)
+        generate_response(text, pipeline_en, 'generated_text')
 
 st.title('Tiếng Việt -> English')
 with st.form('vi_en'):
     text = st.text_area('Enter text:', 'Chào bạn.')
     submitted = st.form_submit_button('Dịch')
     if submitted:
-        generate_response(text, pipeline_vi)
+        generate_response(text, pipeline_vi, 'translation_text')
